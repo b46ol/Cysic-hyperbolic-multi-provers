@@ -1,49 +1,49 @@
 <h1 align="center">Setup Multiple Provers on Hyperbolic</h1>
 <br>
 
-1. Download dan Setup Prover untuk Address1
+1. Download dan Setup Prover for address1
 ```
 sudo apt install -y curl
 curl -L github.com/cysic-labs/phase2_libs/releases/download/v1.0.0/setup_prover.sh > ~/setup_prover.sh
 bash ~/setup_prover.sh address1
 ```
-2. Download params20,24,25
+2. Download params20, params24, and params25
 ```
 mkdir -p ~/.scroll_prover/params
 curl -L --retry 999 -C - circuit-release.s3.us-west-2.amazonaws.com/setup/params20 -o ~/.scroll_prover/params/params20
 curl -L --retry 999 -C - circuit-release.s3.us-west-2.amazonaws.com/setup/params24 -o ~/.scroll_prover/params/params24
 curl -L --retry 999 -C - circuit-release.s3.us-west-2.amazonaws.com/setup/params25 -o ~/.scroll_prover/params/params25
 ```
-3. Jalankan prover address1
+3. Run prover address1
 ```
 cd cysic-prover
 bash start.sh
 ```
-4. jika muncul address already replace dengan key yang sudah di backup
+4. If an 'address already' error appears, replace it with the key that has been backed up
 
-5. Copy Folder untuk Address2
+5. Copy Folder for address2
 ```
 cd /home/ubuntu
 cp -r cysic-prover cysic-prover-2
 ```
-6. Copy key file ke folder address2 (/home/ubuntu/cysic-prover-2/~/.cysic/assets)
+6. Copy key file to address2 folder (/home/ubuntu/cysic-prover-2/~/.cysic/assets)
    
-7. Rubah EVM address di file config.yaml address2
+7. Change EVM address on config.yaml file for address2
 ```
 sudo apt install -y nano
 nano /home/ubuntu/cysic-prover-2/config.yaml
 ```
-8. Simpan file CTRL+X -> Y -> ENTER
+8. Saave file ( CTRL+X -> Y -> ENTER )
 		
 9. Install supervisor
 ```
 sudo apt install -y supervisor
 ```
-10. buat file supervisord.conf
+10. Create file supervisord.conf
 ```
 nano supervisord.conf
 ```
-11. copy kode berikut:
+11. Copy the following code
 ```
 [unix_http_server]
 file=/tmp/supervisor.sock   ; the path to the socket file
@@ -91,18 +91,18 @@ stdout_logfile_maxbytes=1GB
 stdout_logfile_backups=1
 environment=LD_LIBRARY_PATH="/home/ubuntu/cysic-prover-2",CHAIN_ID="534352"
 ```
-12. Simpan file CTRL+X -> Y -> ENTER
+12. Save file ( CTRL+X -> Y -> ENTER )
 
-13. Jalankan supervisor
+13. Run supervisor
 ```
 supervisord -c supervisord.conf
 ```
-14. Cek log
+14. Log check
   - Prover1
 ```
 supervisorctl tail -f cysic-prover
 ```
-  - Prover2 (setelah 1 jam)
+  - Prover2 (after 1 hour)
 ```
 supervisorctl tail -f cysic-prover-2
 ```
